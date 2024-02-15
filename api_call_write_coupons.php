@@ -1,48 +1,65 @@
 <?php
 
-$curl = curl_init();
+$price = -1; // Giá cần áp dụng phiếu giảm giá
+$coupon_code = "trantam280304"; // Mã phiếu giảm giá một lần sử dụng
 
-$data = array(
-    'price_rule' => array(
-        'title' => 'Buy2iPodsGetiPodTouchForFree',
-        'value_type' => 'percentage',
-        'value' => '-100.0',
-        'customer_selection' => 'all',
-        'target_type' => 'line_item',
-        'target_selection' => 'entitled',
-        'allocation_method' => 'each',
-        'starts_at' => '2024-01-30T00:00:00-00:00',
-        'ends_at' => '2024-02-29T23:59:59-00:00',
-        'prerequisite_to_entitlement_quantity_ratio' => array(
-            'prerequisite_quantity' => 2,
-            'entitled_quantity' => 1
-        ),
-        'entitled_product_ids' => array(
-            7315159941182
-        ),
-        'allocation_limit' => 3
-    )
-);
+$token = "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";
 
-$jsonData = json_encode($data);
+// Tạo price rule
+$priceRuleData = 
+'{
+  "price_rule": {
+      "title": "Giảm giá",
+      "value_type": "fixed_amount",
+      "value": "'.$price.'",
+      "customer_selection": "all",
+      "target_type": "line_item",
+      "target_selection": "all",
+      "allocation_method": "across",
+      "starts_at": "2024-01-30T00:00:00-00:00",
+      "allocation_limit": 1,
+      "code": "'.$coupon_code.'" // Mã phiếu giảm giá một lần sử dụng
+  }
+}';
 
-curl_setopt_array($curl, array(
-    CURLOPT_URL => 'https:  //hoingotennis.myshopify.com/admin/api/2024-01/price_rules.json',
-    CURLOPT_RETURNTRANSFER => true,
-    CURLOPT_ENCODING => '',
-    CURLOPT_MAXREDIRS => 10,
-    CURLOPT_TIMEOUT => 0,
-    CURLOPT_FOLLOWLOCATION => true,
-    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-    CURLOPT_CUSTOMREQUEST => 'POST',
-    CURLOPT_POSTFIELDS => $jsonData,
-    CURLOPT_HTTPHEADER => array(
-        'Content-Type: application/json',
-        'X-Shopify-Access-Token: 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'
-    ),
+$priceRuleUrl = 'https://0a2f8f.myshopify.com/admin/api/2024-01/price_rules.json';
+$priceRuleCh = curl_init($priceRuleUrl);
+curl_setopt($priceRuleCh, CURLOPT_CUSTOMREQUEST, "POST");
+curl_setopt($priceRuleCh, CURLOPT_POSTFIELDS, $priceRuleData);
+curl_setopt($priceRuleCh, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($priceRuleCh, CURLOPT_HTTPHEADER, array(
+    'Content-Type: application/json',
+    'X-Shopify-Access-Token: ' . $token
 ));
+$priceRuleResponse = curl_exec($priceRuleCh);
+curl_close($priceRuleCh);
 
-$response = curl_exec($curl);
+$priceRuleResponse = json_decode($priceRuleResponse);
+$priceRuleId = $priceRuleResponse->price_rule->id;
 
-curl_close($curl);
-echo $response;
+// Tạo discount code
+$discountCodeData = '
+{
+    "discount_code": {
+        "code": "'.$coupon_code.'"
+    }
+}
+';
+
+$discountCodeUrl = 'https://0a2f8f.myshopify.com/admin/api/2024-01/price_rules/' . $priceRuleId . '/discount_codes.json';
+$discountCodeCh = curl_init($discountCodeUrl);
+curl_setopt($discountCodeCh, CURLOPT_CUSTOMREQUEST, "POST");
+curl_setopt($discountCodeCh, CURLOPT_POSTFIELDS, $discountCodeData);
+curl_setopt($discountCodeCh, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($discountCodeCh, CURLOPT_HTTPHEADER, array(
+    'Content-Type: application/json',
+    'X-Shopify-Access-Token: ' . $token
+));
+$discountCodeResponse = curl_exec($discountCodeCh);
+curl_close($discountCodeCh);
+
+$discountCodeResponse = json_decode($discountCodeResponse);
+echo '<pre>';
+print_r($discountCodeResponse);
+die();
+?>
