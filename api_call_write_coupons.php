@@ -3,7 +3,7 @@
 $price = -1; // Giá cần áp dụng phiếu giảm giá
 $coupon_code = "trantam280304"; // Mã phiếu giảm giá một lần sử dụng
 
-$token = "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";
+$token = "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";
 
 // Tạo price rule
 $priceRuleData = 

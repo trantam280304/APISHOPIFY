@@ -1,7 +1,17 @@
 <?php
-$token = "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";
-$data = '
-{
+
+$curl = curl_init();
+
+curl_setopt_array($curl, array(
+  CURLOPT_URL => 'https://0a2f8f.myshopify.com/admin/api/2024-01/checkouts.json',
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_ENCODING => '',
+  CURLOPT_MAXREDIRS => 10,
+  CURLOPT_TIMEOUT => 0,
+  CURLOPT_FOLLOWLOCATION => true,
+  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+  CURLOPT_CUSTOMREQUEST => 'POST',
+  CURLOPT_POSTFIELDS =>'{
     "checkout":
     {
         "discount_code": "trantam280304",
@@ -13,30 +23,16 @@ $data = '
             }
         ]
     }
-}
-';
-$url = 'https://0a2f8f.myshopify.com/admin/api/2024-01/checkouts.json';
-$ch = curl_init($url);
-curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+}',
+  CURLOPT_HTTPHEADER => array(
+    'X-Shopify-Access-Token: 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',
+    'X-Shopify-Storefront-Access-Token: df8b228cbc468bfd6151ea08c9c6681a',
     'Content-Type: application/json',
-    'X-Shopify-Access-Token: ' . $token
+    'Cookie: _master_udr=eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaEpJaWsyTmpaa1l6ZGlNaTB5WkRKaExUUTFOV0l0T0RObVppMHpZVGd3TldWa05EQm1aV0lHT2daRlJnPT0iLCJleHAiOiIyMDI2LTAxLTI5VDA3OjA2OjA1LjEzMFoiLCJwdXIiOiJjb29raWUuX21hc3Rlcl91ZHIifX0%3D--0f0b9a0b31384895b4944b764082e6c30afbfcb3; _secure_admin_session_id=dbce013207a0808c01347d16c62d6350; _secure_admin_session_id_csrf=dbce013207a0808c01347d16c62d6350; localization=VN; secure_customer_sig='
+  ),
 ));
-$response = curl_exec($ch);
-curl_close($ch);
 
-$response = json_decode($response);
+$response = curl_exec($curl);
 
-if (isset($response->checkout) && isset($response->checkout->web_url)) {
-    $checkoutUrl = $response->checkout->web_url;
-
-    // Redirect to the checkout page
-    header("Location: $checkoutUrl");
-    exit;
-} else {
-    // Handle error here
-    echo "Error creating checkout.";
-}
-?>
+curl_close($curl);
+echo $response;
