@@ -1,31 +1,41 @@
 <?php
-$checkoutToken = 'c1-4b7b1c40e0461e2bdc2746e5bec028f7'; // Thay đổi giá trị này bằng checkout_token của bạn
-$shopifyApiUrl = 'https://hoingotennis.myshopify.com/admin/api/2024-01';
+// Thông tin cửa hàng Shopify
+$shopDomain = '52ca1e-3.myshopify.com';
+$accessToken = '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';
+$apiVersion = '2024-01';
 
-$url = $shopifyApiUrl . '/checkouts/' . $checkoutToken . '.json';
+$url = "https://$shopDomain/admin/api/$apiVersion/checkouts.json";
 
-$ch = curl_init($url);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+$header = array(
     'Content-Type: application/json',
-    'X-Shopify-Access-Token: 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'
+    'X-Shopify-Access-Token: ' . $accessToken
+);
+
+$curl = curl_init();
+
+curl_setopt_array($curl, array(
+    CURLOPT_URL => $url,
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_HTTPHEADER => $header,
 ));
 
-$response = curl_exec($ch);
-curl_close($ch);
+$response = curl_exec($curl);
+$http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+curl_close($curl);
 
 if ($response !== false) {
     $responseData = json_decode($response, true);
-            var_dump($responseData);
-            die();
 
-    // Trích xuất total price từ phản hồi JSON
-    if (isset($responseData['checkout']['total_price'])) {
-        $totalPrice = $responseData['checkout']['total_price'];
-        echo 'Total Price: ' . $totalPrice;
-    } else {
-        echo 'Total Price not found in API response.';
-    }
+    usort($responseData['checkouts'], function($a, $b) {
+        return strtotime($b['created_at']) - strtotime($a['created_at']);
+    });
+
+    $latestCheckouts = array_slice($responseData['checkouts'], 0, 1); 
+
+    echo "<pre>";
+    print_r($latestCheckouts);
+    echo "</pre>";
 } else {
     echo 'Error occurred during API request.';
 }

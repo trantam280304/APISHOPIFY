@@ -1,9 +1,9 @@
 <?php
 
 // Set variables for our request
-$shop = 'nguyen-thi-hang28';
-$api_key = "e3dc850611f9c4fd7fedef80766f6a67";
-$scopes = "read_customers,write_customers,read_products,write_products,read_discounts,write_discounts,read_orders,write_orders,read_checkouts,write_checkouts,read_price_rules,write_price_rules";
+$shop = '52ca1e-3';
+$api_key = "bf4978ac30a96d9829ef6a88caab8af7";
+$scopes = "write_products,read_orders,read_themes,write_themes,read_price_rules,read_discounts,read_customers,write_discounts,read_price_rules,write_price_rules,read_checkouts,write_checkouts,read_customers,write_customers";
 $redirect_uri = "http://apishopify.test/generate_token.php";
 
 // Build install/approval URL to redirect to
@@ -12,3 +12,5 @@ $install_url = "https://" . $shop . ".myshopify.com/admin/oauth/authorize?client
 // Redirect
 header("Location: " . $install_url);
 die();
+
+

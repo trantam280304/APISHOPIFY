@@ -1,9 +1,9 @@
 <?php
 
-$price = -1; // Giá cần áp dụng phiếu giảm giá
+$price = -200000; // Giá cần áp dụng phiếu giảm giá
 $coupon_code = "trantam280304"; // Mã phiếu giảm giá một lần sử dụng
 
-$token = "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";
+$token = "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";
 
 // Tạo price rule
 $priceRuleData = 
@@ -22,7 +22,7 @@ $priceRuleData =
   }
 }';
 
-$priceRuleUrl = 'https://0a2f8f.myshopify.com/admin/api/2024-01/price_rules.json';
+$priceRuleUrl = 'https://52ca1e-3.myshopify.com/admin/api/2024-01/price_rules.json';
 $priceRuleCh = curl_init($priceRuleUrl);
 curl_setopt($priceRuleCh, CURLOPT_CUSTOMREQUEST, "POST");
 curl_setopt($priceRuleCh, CURLOPT_POSTFIELDS, $priceRuleData);
@@ -46,7 +46,7 @@ $discountCodeData = '
 }
 ';
 
-$discountCodeUrl = 'https://0a2f8f.myshopify.com/admin/api/2024-01/price_rules/' . $priceRuleId . '/discount_codes.json';
+$discountCodeUrl = 'https://52ca1e-3.myshopify.com/admin/api/2024-01/price_rules/' . $priceRuleId . '/discount_codes.json';
 $discountCodeCh = curl_init($discountCodeUrl);
 curl_setopt($discountCodeCh, CURLOPT_CUSTOMREQUEST, "POST");
 curl_setopt($discountCodeCh, CURLOPT_POSTFIELDS, $discountCodeData);

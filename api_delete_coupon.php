@@ -3,7 +3,7 @@
 $curl = curl_init();
 
 curl_setopt_array($curl, array(
-  CURLOPT_URL => 'https://0a2f8f.myshopify.com/admin/api/2024-01/price_rules/1424455500061.json',
+  CURLOPT_URL => 'https://0a2f8f.myshopify.com/admin/api/2024-01/price_rules/1425529831709.json',
   CURLOPT_RETURNTRANSFER => true,
   CURLOPT_ENCODING => '',
   CURLOPT_MAXREDIRS => 10,
